@@ -25,7 +25,7 @@ command line interface to apply different scheduling techniques:<br/><br/><b>
 
 > time_slice is also known as time quantum that is assigned in Round Robin
 
-> input_file contains the different processes that can be changed as per your will
+> input_file (processes1.txt) contains the different processes that can be changed as per your will
 
 Spark Kernel parses these command line arguments and takes the appropriate route from there. The 
 input file should have the following format:<br/><br/>
