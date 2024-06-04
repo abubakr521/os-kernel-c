@@ -13,11 +13,19 @@ with a twist of POSIX Threads to make processing and execution fast and efficien
 # How does Spark Kernel work?
 Spark kernel has an easy-to-use command-line interface. This is how you can use Spark Kernel 
 command line interface to apply different scheduling techniques:<br/><br/><b>
+### To compile the program simply use the command 
+> g++ os-kernel.cpp -o os-kernel
 
 • First Come First Serve: ./os-kernel <input_file> <#cpus> f <output_file><br/>
 • Round Robin: ./os-kernel <input_file> <#cpus> r <time_slice> <output_file><br/>
 • Preemptive Priority: ./os-kernel <input_file> <#cpus> p <output_file><br/>
 • Shortest Job First: ./os-kernel <input_file> <#cpus> s <output_file><br/><br/></b>
+
+> cpus refers to number of cores
+
+> time_slice is also known as time quantum that is assigned in Round Robin
+
+> input_file contains the different processes that can be changed as per your will
 
 Spark Kernel parses these command line arguments and takes the appropriate route from there. The 
 input file should have the following format:<br/><br/>
