@@ -14,8 +14,9 @@ with a twist of POSIX Threads to make processing and execution fast and efficien
 Spark kernel has an easy-to-use command-line interface. This is how you can use Spark Kernel 
 command line interface to apply different scheduling techniques:<br/><br/><b>
 ### To compile the program simply use the command 
-> g++ os-kernel.cpp -o os-kernel
-
+```diff
+g++ os-kernel.cpp -o os-kernel
+```
 • First Come First Serve: ./os-kernel <input_file> <#cpus> f <output_file><br/>
 • Round Robin: ./os-kernel <input_file> <#cpus> r <time_slice> <output_file><br/>
 • Preemptive Priority: ./os-kernel <input_file> <#cpus> p <output_file><br/>
@@ -43,61 +44,65 @@ execution. Here is a sneak peek:<br/>
 
 # Program Structure
 ### os-kernel.cpp
+```diff
 int main(int, char*[]) //driver code
-
+```
 ### os-kernel.h
-void init_proc(vector<entry>&, string) //initializes text file input to pcb entries<br/>
+```diff
+void init_proc(vector<entry>&, string) //initializes text file input to pcb entries
 void sortVec(vector<entry>&) //sorts all entries according to arrival time
-
+```
 ### process.h
-struct entry //stores pcb-related data of a process <br/>
-struct compareEntry: bool operator()(entry*, entry*) //operator overload for priority queue<br/>
-struct compareCpu: bool operator()(entry*, entry*) //operator overload for priority queue<br/>
+```diff
+struct entry //stores pcb-related data of a process 
+struct compareEntry: bool operator()(entry*, entry*) //operator overload for priority queue
+struct compareCpu: bool operator()(entry*, entry*) //operator overload for priority queue
 struct sortEntry:inline bool operator()(const entry&, const entry&) //operator overload for sorting
-
+```
 ### scheduler.h
-struct fcfs{ //structure for first come first serve scheduling<br/>
-  &emsp;void context_switch() //adds to number of context switches<br/>
-  &emsp;void yield(entry*) //sends process to I/O<br/>
-  &emsp;void terminate(entry*) //terminates process after execution<br/>
-  &emsp;void wakeup(entry*) //sends process back to CPU from I/O<br/>
-  &emsp;void cpu_thread(int) //CPU thread<br/>
-  &emsp;void io_thread(int) // I/O thread<br/>
-  &emsp;string idle(entry*) //decides if a process is idle or not<br/>
-  &emsp;void schedule(char*) //schedules all processes<br/>
-  &emsp;fcfs(vector<entry>*, int, char*) //start function to initialize scheduler<br/>
-}<br/><br/>
-struct round_robin{ //structure for round robin scheduling<br/>
-  &emsp;void context_switch() //adds to number of context switches<br/>
-  &emsp;void yield(entry*) //sends process to I/O<br/>
-  &emsp;void terminate(entry*) //terminates process after execution<br/>
-  &emsp;void preempt(entry*) force-fully takes CPU for another process<br/>
-  &emsp;void wakeup(entry*) //sends process back to CPU from I/O<br/>
-  &emsp;void cpu_thread(int) //CPU thread<br/>
-  &emsp;void io_thread(int) // I/O thread<br/>
-  &emsp;string idle(entry*) //decides if a process is idle or not<br/>
-  &emsp;void schedule(char*) //schedules all processes<br/>
-  &emsp;round_robin(vector<entry>*, int, int, char*) //start function to initialize scheduler<br/>
-}<br/><br/>
-struct priority{ //structure for preemptive priority-based scheduling<br/>
-  &emsp;void context_switch() //adds to number of context switches<br/>
-  &emsp;void preempt() //force-fully takes CPU for another process<br/>
-  &emsp;void cpu_thread(int) //CPU thread<br/>
-  &emsp;void io_thread(int) // I/O thread<br/>
-  &emsp;string idle(entry*) //decides if a process is idle or not<br/>
-  &emsp;void schedule(char*) //schedules all processes<br/>
-  &emsp;priority(vector<entry>*, int, char*) //start function to initialize scheduler<br/>
-}<br/><br/>
-struct sjf{<br/>
-  &emsp;void context_switch() //adds to number of context switches<br/>
-  &emsp;void preempt() //force-fully takes CPU for another process<br/>
-  &emsp;void cpu_thread(int) //CPU thread<br/>
-  &emsp;void io_thread(int) // I/O thread<br/>
-  &emsp;string idle(entry*) //decides if a process is idle or not<br/>
-  &emsp;void schedule(char*) //schedules all processes<br/>
-  &emsp;sjf(vector<entry>*, int, char*) //start function to initialize scheduler<br/>
+```diff
+struct fcfs{ //structure for first come first serve scheduling
+  &emsp;void context_switch() //adds to number of context switches
+  &emsp;void yield(entry*) //sends process to I/O
+  &emsp;void terminate(entry*) //terminates process after execution
+  &emsp;void wakeup(entry*) //sends process back to CPU from I/O
+  &emsp;void cpu_thread(int) //CPU thread
+  &emsp;void io_thread(int) // I/O thread
+  &emsp;string idle(entry*) //decides if a process is idle or not
+  &emsp;void schedule(char*) //schedules all processes
+  &emsp;fcfs(vector<entry>*, int, char*) //start function to initialize scheduler
 }
-
+struct round_robin{ //structure for round robin scheduling
+  &emsp;void context_switch() //adds to number of context switches
+  &emsp;void yield(entry*) //sends process to I/O
+  &emsp;void terminate(entry*) //terminates process after execution
+  &emsp;void preempt(entry*) force-fully takes CPU for another process
+  &emsp;void wakeup(entry*) //sends process back to CPU from I/O
+  &emsp;void cpu_thread(int) //CPU thread
+  &emsp;void io_thread(int) // I/O thread
+  &emsp;string idle(entry*) //decides if a process is idle or not
+  &emsp;void schedule(char*) //schedules all processes
+  &emsp;round_robin(vector<entry>*, int, int, char*) //start function to initialize scheduler
+}
+struct priority{ //structure for preemptive priority-based scheduling
+  &emsp;void context_switch() //adds to number of context switches
+  &emsp;void preempt() //force-fully takes CPU for another process
+  &emsp;void cpu_thread(int) //CPU thread
+  &emsp;void io_thread(int) // I/O thread
+  &emsp;string idle(entry*) //decides if a process is idle or not
+  &emsp;void schedule(char*) //schedules all processes
+  &emsp;priority(vector<entry>*, int, char*) //start function to initialize scheduler
+}
+struct sjf{
+  &emsp;void context_switch() //adds to number of context switches
+  &emsp;void preempt() //force-fully takes CPU for another process
+  &emsp;void cpu_thread(int) //CPU thread
+  &emsp;void io_thread(int) // I/O thread
+  &emsp;string idle(entry*) //decides if a process is idle or not
+  &emsp;void schedule(char*) //schedules all processes
+  &emsp;sjf(vector<entry>*, int, char*) //start function to initialize scheduler
+}
+```
 ### Color.hpp
 An open-source GitHub library to bring color to your terminal.<br/>
 Repository: https://github.com/hugorplobo/colors.hpp<br/>
